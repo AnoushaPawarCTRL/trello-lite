@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ProjectResponse;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
@@ -28,7 +29,14 @@ public class ProjectController {
                 request.get("description"),
                 owner
         );
-        return ResponseEntity.ok(project);
+
+        ProjectResponse response = new ProjectResponse();
+        response.setId(project.getId());
+        response.setName(project.getName());
+        response.setDescription(project.getDescription());
+        response.setOwnerUsername(project.getOwner().getUsername());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
