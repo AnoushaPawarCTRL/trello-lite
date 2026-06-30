@@ -1,11 +1,13 @@
 package com.example.demo.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +19,10 @@ public class UserService {
     public User register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()) != null) {
             throw new RuntimeException("Email already in use");
+        }
+
+        if (userRepository.findByUsername(request.getUsername()) != null) {
+            throw new RuntimeException("Username already in use");
         }
 
         User user = new User();
