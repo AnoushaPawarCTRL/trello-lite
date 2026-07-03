@@ -63,4 +63,29 @@ class AuthControllerIntegrationTest {
                 .andExpect(jsonPath("$.status").value(409))
                 .andExpect(jsonPath("$.message").value("Email already in use"));
     }
+
+    @Test
+    void shouldRejectDuplicateUsernameRegistration() throws Exception {
+        Map<String, String> request = new HashMap<>();
+        request.put("username", "duplicateuser");
+        request.put("email", "first@test.com");
+        request.put("password", "password123");
+
+        mockMvc.perform(post("/api/auth/register")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        Map<String, String> duplicateRequest = new HashMap<>();
+        duplicateRequest.put("username", "duplicateuser");
+        duplicateRequest.put("email", "second@test.com");
+        duplicateRequest.put("password", "password456");
+
+        mockMvc.perform(post("/api/auth/register")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(duplicateRequest)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.message").value("Username already in use"));
+    }
 }
