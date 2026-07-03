@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
+import com.example.demo.exception.DuplicateEmailException;
+import com.example.demo.exception.DuplicateUsernameException;
 import com.example.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,11 +20,11 @@ public class UserService {
 
     public User register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()) != null) {
-            throw new RuntimeException("Email already in use");
+            throw new DuplicateEmailException("Email already in use");
         }
 
         if (userRepository.findByUsername(request.getUsername()) != null) {
-            throw new RuntimeException("Username already in use");
+            throw new DuplicateUsernameException("Username already in use");
         }
 
         User user = new User();
@@ -32,6 +34,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+        
 
     public User findByEmail(String email) {
     return userRepository.findByEmail(email);
