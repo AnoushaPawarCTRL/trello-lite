@@ -1,5 +1,7 @@
+// TaskController.java
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +40,16 @@ public class TaskController {
         User assignedUser = request.get("assignedUserId") != null
                 ? userRepository.findById(Long.parseLong(request.get("assignedUserId"))).orElse(null)
                 : null;
+        LocalDate deadline = request.get("deadline") != null && !request.get("deadline").isBlank()
+                ? LocalDate.parse(request.get("deadline"))
+                : null;
 
         Task task = taskService.createTask(
                 request.get("title"),
                 request.get("description"),
                 project,
-                assignedUser
+                assignedUser,
+                deadline
         );
         return ResponseEntity.ok(task);
     }
@@ -52,6 +58,15 @@ public class TaskController {
     public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
         TaskStatus status = TaskStatus.valueOf(request.get("status"));
         Task task = taskService.updateTaskStatus(id, status);
+        return ResponseEntity.ok(task);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        LocalDate deadline = request.get("deadline") != null && !request.get("deadline").isBlank()
+                ? LocalDate.parse(request.get("deadline"))
+                : null;
+        Task task = taskService.updateTask(id, request.get("title"), request.get("description"), deadline);
         return ResponseEntity.ok(task);
     }
 

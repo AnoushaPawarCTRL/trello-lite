@@ -1,4 +1,6 @@
 package com.example.demo.entity;
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -31,6 +33,9 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TaskStatus status = TaskStatus.TO_DO;
+
+    @Column
+    private LocalDate deadline;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
