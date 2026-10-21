@@ -1,53 +1,13 @@
-HELP.md
+# Build output
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+node_modules/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Real deployment secrets (copy .env.example to .env on the server). Never commit.
+/.env
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-
-# Compiled
-target/
-
-# Application properties (contains DB credentials)
-src/main/resources/application.properties
+# Let's Encrypt certificates and private keys (created on the server)
+/certbot/
 
 # IDE
-.vscode/
 .idea/
-*.iml
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Maven
-*.class
-Important 
+.vscode/

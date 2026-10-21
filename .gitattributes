@@ -1,2 +1,8 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+* text=auto
+# Files that run on Linux servers must keep Linux (LF) line endings
+*.sh text eol=lf
+*.template text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
