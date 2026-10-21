@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* TrelloLite theme tokens — the purple palette from the login page design,
+   available app-wide as Tailwind utilities (bg-brand-600, text-ink, font-display, ...). */
+@theme {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand-950: #1a1430;
+  --color-brand-900: #241b3d;
+  --color-brand-700: #4a3b7a;
+  --color-brand-600: #6e5aa3;
+  --color-brand-500: #8674b8;
+  --color-brand-300: #a996d4;
+  --color-brand-200: #c9c1e3;
+  --color-brand-100: #ede8f7;
+  --color-brand-50: #fbfafe;
+
+  --color-ink: #221c35;
+  --color-ink-muted: #6e6785;
+  --color-ink-faint: #8c82ae;
+  --color-line: #e2ddf0;
+}
+
+body {
+  margin: 0;
+}
