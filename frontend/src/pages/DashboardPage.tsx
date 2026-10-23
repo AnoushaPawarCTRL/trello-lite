@@ -4,11 +4,13 @@ import { projectService } from '../services/projectService';
 import type { Project } from '../types/project';
 import { CreateProjectForm } from '../components/CreateProjectForm';
 import { ProjectCard } from '../components/ProjectCard';
+import { useNavigate } from 'react-router-dom';
 
 export function DashboardPage() {
   const { user, logout } = useAuth();
 
   const [projects, setProjects] = useState<Project[]>([]);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,15 +29,14 @@ export function DashboardPage() {
         if (!cancelled) setIsLoading(false);
       });
 
-    // avoid setting state on an unmounted component if this page is left
-    // before the request finishes
+
     return () => {
       cancelled = true;
     };
   }, []);
 
   const handleCreated = (project: Project) => {
-    setProjects((prev) => [project, ...prev]);
+    navigate(`/projects/${project.id}`);
   };
 
   return (
