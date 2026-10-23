@@ -22,7 +22,7 @@ export function RegisterPage() {
     try {
       const response = await authService.register({ username, email, password });
       login(response.token, response.username, email);
-      navigate('/dashboard');
+      navigate('/dashboard', { state: { isNewUser: true } });
     } catch (err: any) {
       const message = err.response?.data?.message || 'Registration failed. Please try again.';
       setError(message);

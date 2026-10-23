@@ -4,7 +4,7 @@ import { projectService } from '../services/projectService';
 import type { Project } from '../types/project';
 import { CreateProjectForm } from '../components/CreateProjectForm';
 import { ProjectCard } from '../components/ProjectCard';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function DashboardPage() {
   const { user, logout } = useAuth();
@@ -13,6 +13,12 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
+
+  const isNewUser = location.state?.isNewUser;
+  const greeting = isNewUser
+    ? `Welcome, ${user?.username}`
+    : `Welcome back, ${user?.username}`;
 
   useEffect(() => {
     let cancelled = false;
@@ -55,6 +61,10 @@ export function DashboardPage() {
       </header>
 
       <main className="p-6 max-w-4xl mx-auto space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold">{greeting}</h2>
+          <p className="text-gray-600">Here are your projects.</p>
+        </div>
         <CreateProjectForm onCreated={handleCreated} />
 
         {error && (
