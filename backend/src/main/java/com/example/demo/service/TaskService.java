@@ -11,6 +11,7 @@ import com.example.demo.entity.Task;
 import com.example.demo.entity.TaskStatus;
 import com.example.demo.entity.User;
 import com.example.demo.repository.TaskRepository;
+import com.example.demo.exception.TaskNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,5 +58,19 @@ public class TaskService {
 
     public void deleteTask(Long taskId) {
         taskRepository.deleteById(taskId);
+    }
+
+    public Task getTaskForOwner(Long taskId, User owner) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + taskId));
+        if (!task.getProject().getOwner().getId().equals(owner.getId())) {
+            throw new TaskNotFoundException("Task not found with id: " + taskId);
+        }
+        return task;
+    }
+
+    public List<Task> getUpcomingTasks(User owner) {
+        return taskRepository.findByProjectOwnerAndDeadlineLessThanEqualAndStatusNotOrderByDeadlineAsc(
+                owner, LocalDate.now().plusDays(7), TaskStatus.DONE);
     }
 }

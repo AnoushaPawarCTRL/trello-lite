@@ -38,6 +38,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleTaskNotFound(TaskNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

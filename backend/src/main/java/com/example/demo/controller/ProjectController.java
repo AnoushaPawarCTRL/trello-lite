@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.ProjectResponse;
 import com.example.demo.dto.TaskResponse;
 import com.example.demo.entity.Project;
-import com.example.demo.entity.Task;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ProjectService;
@@ -51,11 +50,12 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getProject(@PathVariable Long id) {
-        Project project = projectService.getProjectById(id);
-        return ResponseEntity.ok(toProjectResponse(project));
-    }
+        @GetMapping("/{id}")
+        public ResponseEntity<?> getProject(@PathVariable Long id, Authentication authentication) {
+            User owner = userRepository.findByUsername(authentication.getName());
+            Project project = projectService.getProjectForOwner(id, owner);
+            return ResponseEntity.ok(toProjectResponse(project));
+        }
 
     private ProjectResponse toProjectResponse(Project project) {
         ProjectResponse response = new ProjectResponse();
@@ -64,21 +64,10 @@ public class ProjectController {
         response.setDescription(project.getDescription());
         response.setOwnerUsername(project.getOwner().getUsername());
         response.setTasks(
-            project.getTasks().stream().map(this::toTaskResponse).toList()
+            project.getTasks().stream().map(TaskResponse::from).toList()
         );
         return response;
     }
 
-    private TaskResponse toTaskResponse(Task task) {
-        TaskResponse response = new TaskResponse();
-        response.setId(task.getId());
-        response.setTitle(task.getTitle());
-        response.setDescription(task.getDescription());
-        response.setStatus(task.getStatus());
-        response.setProjectId(task.getProject().getId());
-        response.setAssignedUsername(
-            task.getAssignedUser() != null ? task.getAssignedUser().getUsername() : null
-        );
-        return response;
-    }
+    
 }

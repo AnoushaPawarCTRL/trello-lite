@@ -33,4 +33,12 @@ public class ProjectService {
         return projectRepository.findByIdWithTasks(id)
             .orElseThrow(() -> new ProjectNotFoundException("Project not found with id: " + id));
     }
+
+    public Project getProjectForOwner(Long id, User owner) {
+        Project project = getProjectById(id);
+        if (!project.getOwner().getId().equals(owner.getId())) {
+            throw new ProjectNotFoundException("Project not found with id: " + id);
+        }
+        return project;
+    }
 }
