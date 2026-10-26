@@ -7,14 +7,17 @@ export const taskService = {
     return response.data;
   },
 
+  getUpcoming: async (): Promise<Task[]> => {
+    const response = await api.get<Task[]>('/tasks/upcoming');
+    return response.data;
+  },
+
   create: async (data: CreateTaskRequest): Promise<Task> => {
-    // The backend takes a Map<String, String>, so projectId has to go
-    // over the wire as a string, not a JSON number.
+
     const response = await api.post<Task>('/tasks', {
       title: data.title,
       description: data.description,
       projectId: String(data.projectId),
-      // Only send a deadline if one was picked; omitting it means "no deadline".
       ...(data.deadline ? { deadline: data.deadline } : {}),
     });
     return response.data;

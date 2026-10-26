@@ -5,6 +5,7 @@ import type { Project } from '../types/project';
 import { CreateProjectForm } from '../components/CreateProjectForm';
 import { ProjectCard } from '../components/ProjectCard';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { UpcomingTasks } from '../components/UpcomingTasks';
 
 export function DashboardPage() {
   const { user, logout } = useAuth();
@@ -65,6 +66,7 @@ export function DashboardPage() {
           <h2 className="text-2xl font-bold">{greeting}</h2>
           <p className="text-gray-600">Here are your projects.</p>
         </div>
+        <UpcomingTasks />
         <CreateProjectForm onCreated={handleCreated} />
 
         {error && (

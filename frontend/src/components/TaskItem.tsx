@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { taskService } from '../services/taskService';
 import type { Task, TaskStatus } from '../types/task';
+import { formatDeadline, isOverdue } from '../utils/dates';
 
 const STATUS_LABELS: Record<TaskStatus, string> = {
   TO_DO: 'To do',
@@ -8,24 +9,6 @@ const STATUS_LABELS: Record<TaskStatus, string> = {
   DONE: 'Done',
 };
 
-function formatDeadline(deadline: string): string {
-  // deadline is a plain "yyyy-MM-dd" string — parse it as local, not UTC,
-  // so it doesn't shift a day depending on the browser's timezone.
-  const [year, month, day] = deadline.split('-').map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
-function isOverdue(deadline: string): boolean {
-  const [year, month, day] = deadline.split('-').map(Number);
-  const due = new Date(year, month - 1, day);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return due < today;
-}
 
 export function TaskItem({
   task,
