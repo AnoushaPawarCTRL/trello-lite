@@ -6,11 +6,13 @@ import { CreateProjectForm } from '../components/CreateProjectForm';
 import { ProjectCard } from '../components/ProjectCard';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { UpcomingTasks } from '../components/UpcomingTasks';
+import { Modal } from '../components/Modal';
 
 export function DashboardPage() {
   const { user, logout } = useAuth();
 
   const [projects, setProjects] = useState<Project[]>([]);
+  const [showCreate, setShowCreate] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,27 +64,43 @@ export function DashboardPage() {
       </header>
 
       <main className="p-6 max-w-4xl mx-auto space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold">{greeting}</h2>
-          <p className="text-gray-600">Here are your projects.</p>
-        </div>
+        <h2 className="text-2xl font-bold">{greeting}</h2>
+
         <UpcomingTasks />
-        <CreateProjectForm onCreated={handleCreated} />
 
-        {error && (
-          <div className="p-3 bg-red-50 text-red-700 text-sm rounded">{error}</div>
-        )}
-
-        {isLoading ? (
-          <p className="text-gray-500">Loading your projects…</p>
-        ) : projects.length === 0 ? (
-          <p className="text-gray-500">You don't have any projects yet. Create one above to get started.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Your projects</h3>
+            <button
+              onClick={() => setShowCreate(true)}
+              className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+            >
+              <span className="text-lg leading-none">+</span>
+              Create new project
+            </button>
           </div>
+
+          {error && (
+            <div className="p-3 bg-red-50 text-red-700 text-sm rounded">{error}</div>
+          )}
+
+          {isLoading ? (
+            <p className="text-gray-500">Loading your projects…</p>
+          ) : projects.length === 0 ? (
+            <p className="text-gray-500">You don't have any projects yet. Create one to get started.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {showCreate && (
+          <Modal title="New project" onClose={() => setShowCreate(false)}>
+            <CreateProjectForm onCreated={handleCreated} />
+          </Modal>
         )}
       </main>
     </div>

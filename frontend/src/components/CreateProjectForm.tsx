@@ -30,8 +30,7 @@ export function CreateProjectForm({ onCreated }: { onCreated: (project: Project)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow space-y-4">
-      <h2 className="text-lg font-semibold">New project</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
 
       {error && (
         <div className="p-3 bg-red-50 text-red-700 text-sm rounded">{error}</div>
@@ -47,6 +46,7 @@ export function CreateProjectForm({ onCreated }: { onCreated: (project: Project)
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          autoFocus
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -67,9 +67,9 @@ export function CreateProjectForm({ onCreated }: { onCreated: (project: Project)
       <button
         type="submit"
         disabled={isSubmitting || !name.trim()}
-        className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isSubmitting ? 'Creating…' : 'Create project'}
+        {isSubmitting ? 'Creating…' : 'Create'}
       </button>
     </form>
   );
