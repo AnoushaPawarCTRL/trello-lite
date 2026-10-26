@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { projectService } from '../services/projectService';
 import { taskService } from '../services/taskService';
 import type { Project } from '../types/project';
@@ -15,6 +15,7 @@ export function ProjectDetailPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -45,6 +46,21 @@ export function ProjectDetailPage() {
     setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
   };
 
+  const handleDeleteProject = async () => {
+    if (!project) return;
+    const confirmed = window.confirm(
+    `Delete "${project.name}" and all its tasks? This can't be undone.`
+  );
+  if (!confirmed) return;
+
+  try {
+    await projectService.delete(project.id);
+    navigate('/dashboard');
+  } catch {
+    alert("Couldn't delete the project. Please try again.");
+  }
+  };
+
   const handleTaskDeleted = (taskId: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== taskId));
   };
@@ -64,13 +80,21 @@ export function ProjectDetailPage() {
           <div className="p-3 bg-red-50 text-red-700 text-sm rounded">{error}</div>
         ) : project ? (
           <>
-            <div>
-              <h1 className="text-xl font-semibold">{project.name}</h1>
-              {project.description && <p className="text-gray-600 mt-1">{project.description}</p>}
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-xl font-semibold">{project.name}</h1>
+                {project.description && <p className="text-gray-600 mt-1">{project.description}</p>}
+              </div>
+
+              <button
+                onClick={handleDeleteProject}
+                className="text-sm text-red-600 hover:underline"
+              >
+                Delete project
+              </button>
             </div>
 
             <CreateTaskForm projectId={projectId} onCreated={handleTaskCreated} />
-
             {tasks.length === 0 ? (
               <p className="text-gray-500">No tasks yet. Add one above.</p>
             ) : (

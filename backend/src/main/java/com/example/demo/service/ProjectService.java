@@ -41,4 +41,20 @@ public class ProjectService {
         }
         return project;
     }
+
+    public Project updateProject(Long id, String name, String description, User owner) {
+        Project project = getProjectForOwner(id, owner);
+        if (name != null && !name.isBlank()) {
+            project.setName(name.trim());
+        }
+        if (description != null) {
+            project.setDescription(description);
+        }
+        return projectRepository.save(project);
+    }
+
+    public void deleteProject(Long id, User owner) {
+        Project project = getProjectForOwner(id, owner);
+        projectRepository.delete(project);
+    }
 }

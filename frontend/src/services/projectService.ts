@@ -25,4 +25,5 @@ export const projectService = {
   delete: async (id: number): Promise<void> => {
     await api.delete(`/projects/${id}`);
   },
+
 };

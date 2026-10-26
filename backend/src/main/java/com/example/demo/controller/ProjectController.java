@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,12 +52,28 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-        @GetMapping("/{id}")
-        public ResponseEntity<?> getProject(@PathVariable Long id, Authentication authentication) {
-            User owner = userRepository.findByUsername(authentication.getName());
-            Project project = projectService.getProjectForOwner(id, owner);
-            return ResponseEntity.ok(toProjectResponse(project));
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProject(@PathVariable Long id, Authentication authentication) {
+        User owner = userRepository.findByUsername(authentication.getName());
+        Project project = projectService.getProjectForOwner(id, owner);
+        return ResponseEntity.ok(toProjectResponse(project));
         }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProject(@PathVariable Long id,
+            @RequestBody Map<String, String> request, Authentication authentication) {
+        User owner = userRepository.findByUsername(authentication.getName());
+        Project project = projectService.updateProject(id,
+                request.get("name"), request.get("description"), owner);
+        return ResponseEntity.ok(toProjectResponse(project));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id, Authentication authentication) {
+        User owner = userRepository.findByUsername(authentication.getName());
+        projectService.deleteProject(id, owner);
+        return ResponseEntity.noContent().build();
+    }
 
     private ProjectResponse toProjectResponse(Project project) {
         ProjectResponse response = new ProjectResponse();
