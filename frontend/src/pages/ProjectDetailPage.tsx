@@ -16,6 +16,9 @@ export function ProjectDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editDescription, setEditDescription] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -61,6 +64,27 @@ export function ProjectDetailPage() {
   }
   };
 
+  const startEditing = () => {
+    if (!project) return;
+    setEditName(project.name);
+    setEditDescription(project.description ?? '');
+    setIsEditing(true);
+  };
+
+  const handleSaveProject = async () => {
+    if (!project || !editName.trim()) return;
+    try {
+      const updated = await projectService.update(project.id, {
+        name: editName.trim(),
+        description: editDescription,
+      });
+      setProject(updated);
+      setIsEditing(false);
+    } catch {
+      alert("Couldn't rename the project. Please try again.");
+    }
+  };
+
   const handleTaskDeleted = (taskId: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== taskId));
   };
@@ -80,20 +104,49 @@ export function ProjectDetailPage() {
           <div className="p-3 bg-red-50 text-red-700 text-sm rounded">{error}</div>
         ) : project ? (
           <>
-            <div className="flex items-start justify-between">
-              <div>
-                <h1 className="text-xl font-semibold">{project.name}</h1>
-                {project.description && <p className="text-gray-600 mt-1">{project.description}</p>}
-              </div>
+            <div className="flex items-start justify-between gap-4">
+              {isEditing ? (
+                <div className="flex-1 space-y-2">
+                  <input
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="w-full border rounded px-2 py-1 text-xl font-semibold"
+                    autoFocus
+                  />
+                  <textarea
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    className="w-full border rounded px-2 py-1"
+                    placeholder="Description (optional)"
+                  />
+                  <div className="flex gap-2">
+                    <button onClick={handleSaveProject} className="text-sm bg-blue-600 text-white px-3 py-1 rounded">
+                      Save
+                    </button>
+                    <button onClick={() => setIsEditing(false)} className="text-sm text-gray-600 hover:underline">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h1 className="text-xl font-semibold">{project.name}</h1>
+                  {project.description && <p className="text-gray-600 mt-1">{project.description}</p>}
+                </div>
+              )}
 
-              <button
-                onClick={handleDeleteProject}
-                className="text-sm text-red-600 hover:underline"
-              >
-                Delete project
-              </button>
+              {!isEditing && (
+                <div className="flex gap-3">
+                  <button onClick={startEditing} className="text-sm text-blue-600 hover:underline">
+                    Rename
+                  </button>
+                  <button onClick={handleDeleteProject} className="text-sm text-red-600 hover:underline">
+                    Delete project
+                  </button>
+                </div>
+              )}
             </div>
-
+            
             <CreateTaskForm projectId={projectId} onCreated={handleTaskCreated} />
             {tasks.length === 0 ? (
               <p className="text-gray-500">No tasks yet. Add one above.</p>
