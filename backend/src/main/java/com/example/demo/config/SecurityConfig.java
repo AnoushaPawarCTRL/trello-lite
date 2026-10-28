@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
@@ -46,7 +47,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
