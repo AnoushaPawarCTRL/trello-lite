@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,8 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setGuest(false);
+        user.setCreatedAt(LocalDateTime.now());
 
         return userRepository.save(user);
     }
@@ -39,4 +43,4 @@ public class UserService {
     public User findByEmail(String email) {
     return userRepository.findByEmail(email);
 }
-}
+}

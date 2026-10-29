@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -28,4 +30,17 @@ public class User {
     @Column(nullable = false)
     @JsonIgnore
     private String password;
-}
+
+    // Guest demo accounts are temporary and get deleted by GuestService.
+    // Nullable on purpose: existing rows in the live database have no value,
+    // and a NOT NULL column could not be added to them. Null means "not a guest".
+    @Column
+    private Boolean guest;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    public boolean isGuestAccount() {
+        return Boolean.TRUE.equals(guest);
+    }
+}

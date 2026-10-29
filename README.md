@@ -2,7 +2,9 @@
 
 A full stack task management app for organising projects and tasks, built with a React and TypeScript frontend, a Spring Boot REST API and a PostgreSQL database.
 
-**Live demo:** coming soon (deployment in progress)
+**Live demo:** [peaceful-smakager-01a032.netlify.app](https://peaceful-smakager-01a032.netlify.app)
+
+Click **Try as guest** on the login page to explore with sample data, no sign up needed. The backend runs on a free tier that sleeps when idle, so the first request can take up to a minute.
 
 ## Features
 
@@ -13,6 +15,10 @@ A full stack task management app for organising projects and tasks, built with a
 * Track task status (To Do, In Progress, Done) from a dropdown
 * Edit tasks inline and delete them with a confirmation prompt
 * Deadline alerts that flag overdue tasks in red
+* Due soon section on the dashboard for overdue and upcoming tasks
+* Rename and delete projects
+* Ownership checks, so users can only see and change their own projects and tasks
+* One click guest demo: each visitor gets their own temporary account with sample data, removed after 24 hours by a scheduled cleanup job
 
 ## Tech Stack
 
@@ -35,8 +41,9 @@ Errors are handled centrally with `@RestControllerAdvice` and custom exceptions,
 ### Auth
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| POST | `/auth/register` | Create an account |
-| POST | `/auth/login` | Log in and receive a JWT |
+| POST | `/api/auth/register` | Create an account |
+| POST | `/api/auth/login` | Log in and receive a JWT |
+| POST | `/api/auth/guest` | Create a temporary guest account with sample data |
 
 ### Projects
 | Method | Endpoint | Description |
@@ -44,6 +51,8 @@ Errors are handled centrally with `@RestControllerAdvice` and custom exceptions,
 | GET | `/api/projects` | List projects |
 | GET | `/api/projects/{id}` | Get a single project |
 | POST | `/api/projects` | Create a project |
+| PUT | `/api/projects/{id}` | Rename a project or change its description |
+| DELETE | `/api/projects/{id}` | Delete a project and its tasks |
 
 ### Tasks
 | Method | Endpoint | Description |
@@ -53,6 +62,17 @@ Errors are handled centrally with `@RestControllerAdvice` and custom exceptions,
 | PUT | `/api/tasks/{id}` | Edit a task's title, description or deadline |
 | PUT | `/api/tasks/{id}/status` | Update a task's status |
 | DELETE | `/api/tasks/{id}` | Delete a task |
+| GET | `/api/tasks/upcoming` | Overdue tasks and tasks due in the next 7 days |
+
+## Deployment
+
+| Part | Hosted on |
+| --- | --- |
+| Frontend | Netlify |
+| Backend | Render, built from the backend Dockerfile |
+| Database | Neon (managed PostgreSQL, London) |
+
+All configuration (database credentials, JWT secret, allowed CORS origins) is supplied through environment variables, so no secrets live in the repository. The whole stack can also run locally with `docker compose up --build`.
 
 ## Running Locally
 
@@ -89,7 +109,7 @@ mvn test
 
 ## Roadmap
 
-* Deploy with Docker behind an Nginx reverse proxy, served over HTTPS with Let's Encrypt
-* Add project editing and deletion
-* Add ownership checks so users can only access their own projects and tasks
-* Add input validation on project creation
+* Task priority and work or home categories
+* Progress stats on the dashboard
+* Input validation on project creation
+* Move to a self managed VPS with Nginx and HTTPS

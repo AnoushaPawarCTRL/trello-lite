@@ -19,6 +19,7 @@ export function DashboardPage() {
   const location = useLocation();
 
   const isNewUser = location.state?.isNewUser;
+  const isGuest = user?.username.startsWith('guest_') ?? false;
   const greeting = isNewUser
     ? `Welcome, ${user?.username}`
     : `Welcome back, ${user?.username}`;
@@ -64,7 +65,14 @@ export function DashboardPage() {
       </header>
 
       <main className="p-6 max-w-4xl mx-auto space-y-6">
-        <h2 className="text-2xl font-bold">{greeting}</h2>
+        {isGuest && (
+          <div className="p-3 rounded-lg bg-blue-50 text-blue-800 text-sm">
+            You're exploring a guest demo with sample data. Feel free to create, edit and delete
+            anything. This account and its data are deleted after 24 hours.
+          </div>
+        )}
+
+        <h2 className="text-2xl font-bold">{isGuest ? 'Welcome to TrelloLite' : greeting}</h2>
 
         <UpcomingTasks />
 

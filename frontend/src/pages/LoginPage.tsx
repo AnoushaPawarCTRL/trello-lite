@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/authService';
@@ -12,6 +12,33 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
+  const [isSlow, setIsSlow] = useState(false);
+
+  // The free backend sleeps when idle and can take up to a minute to wake.
+  // If the guest request is slow, explain why instead of looking frozen.
+  useEffect(() => {
+    if (!isGuestLoading) {
+      setIsSlow(false);
+      return;
+    }
+    const timer = setTimeout(() => setIsSlow(true), 3000);
+    return () => clearTimeout(timer);
+  }, [isGuestLoading]);
+
+  const handleGuest = async () => {
+    setError(null);
+    setIsGuestLoading(true);
+    try {
+      const response = await authService.guest();
+      login(response.token, response.username, `${response.username}@guest.trellolite.local`);
+      navigate('/dashboard', { state: { isNewUser: true } });
+    } catch {
+      setError("Couldn't start the guest demo. Please try again in a moment.");
+    } finally {
+      setIsGuestLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -124,12 +151,34 @@ export function LoginPage() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isGuestLoading}
                 className="h-11 mt-1 rounded-lg bg-brand-600 text-brand-50 text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isSubmitting ? 'Signing in…' : 'Sign in'}
               </button>
             </form>
+
+            <div className="flex items-center gap-3">
+              <span className="flex-1 h-px bg-line" />
+              <span className="text-xs text-ink-faint">or</span>
+              <span className="flex-1 h-px bg-line" />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={handleGuest}
+                disabled={isGuestLoading || isSubmitting}
+                className="h-11 rounded-lg border border-brand-600 text-brand-700 text-sm font-semibold hover:bg-brand-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isGuestLoading ? 'Starting demo…' : 'Try as guest'}
+              </button>
+              <p className="text-center text-xs text-ink-muted m-0">
+                {isSlow
+                  ? 'Waking up the demo server, this can take up to a minute…'
+                  : 'No sign up needed. Sample data included, deleted after 24 hours.'}
+              </p>
+            </div>
 
             <p className="text-center text-[13px] text-ink-muted m-0">
               New here?{' '}

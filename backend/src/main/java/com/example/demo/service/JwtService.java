@@ -23,10 +23,14 @@ public class JwtService {
     }
 
     public String generateToken(String username) {
+        return generateToken(username, expiration);
+    }
+
+    public String generateToken(String username, long expirationMs) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -54,4 +58,4 @@ public class JwtService {
                 .getExpiration()
                 .before(new Date());
     }
-}
+}
