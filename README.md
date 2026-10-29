@@ -4,7 +4,7 @@ A full stack task management app for organising projects and tasks, built with a
 
 **Live demo:** [trello-lite-anousha.netlify.app](https://trello-lite-anousha.netlify.app/)
 
-![Trello Lite dashboard](docs/dashboard.png)
+![Trello Lite dashboard](docs/Dashboard.png)
 
 Click **Try as guest** on the login page to explore with sample data, no sign up needed. The backend runs on a free tier that sleeps when idle, so the first request can take up to a minute.
 
