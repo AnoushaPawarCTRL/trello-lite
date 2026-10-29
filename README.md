@@ -2,23 +2,25 @@
 
 A full stack task management app for organising projects and tasks, built with a React and TypeScript frontend, a Spring Boot REST API and a PostgreSQL database.
 
-**Live demo:** [peaceful-smakager-01a032.netlify.app](https://peaceful-smakager-01a032.netlify.app)
+**Live demo:** [trello-lite-anousha.netlify.app](https://trello-lite-anousha.netlify.app/)
+
+![Trello Lite dashboard](docs/dashboard.png)
 
 Click **Try as guest** on the login page to explore with sample data, no sign up needed. The backend runs on a free tier that sleeps when idle, so the first request can take up to a minute.
 
 ## Features
 
-* Secure registration and login with JWT authentication
-* Protected routes, so only signed in users can access their dashboard
-* Create projects and view them on a personal dashboard
-* Add tasks to a project, with title, description and optional deadline
-* Track task status (To Do, In Progress, Done) from a dropdown
-* Edit tasks inline and delete them with a confirmation prompt
-* Deadline alerts that flag overdue tasks in red
-* Due soon section on the dashboard for overdue and upcoming tasks
-* Rename and delete projects
-* Ownership checks, so users can only see and change their own projects and tasks
-* One click guest demo: each visitor gets their own temporary account with sample data, removed after 24 hours by a scheduled cleanup job
+- Secure registration and login with JWT authentication
+- Protected routes, so only signed in users can access their dashboard
+- Create projects and view them on a personal dashboard
+- Add tasks to a project, with title, description and optional deadline
+- Track task status (To Do, In Progress, Done) from a dropdown
+- Edit tasks inline and delete them with a confirmation prompt
+- Deadline alerts that flag overdue tasks in red
+- Due soon section on the dashboard for overdue and upcoming tasks
+- Rename and delete projects
+- Ownership checks, so users can only see and change their own projects and tasks
+- One click guest demo: each visitor gets their own temporary account with sample data, removed after 24 hours by a scheduled cleanup job
 
 ## Tech Stack
 
@@ -37,6 +39,9 @@ The React frontend talks to the Spring Boot API over HTTP. On login, the API ret
 Errors are handled centrally with `@RestControllerAdvice` and custom exceptions, so the API always returns clear, consistent JSON error responses.
 
 ## API Endpoints
+
+<details>
+<summary>Show all endpoints</summary>
 
 ### Auth
 | Method | Endpoint | Description |
@@ -72,14 +77,16 @@ Errors are handled centrally with `@RestControllerAdvice` and custom exceptions,
 | Backend | Render, built from the backend Dockerfile |
 | Database | Neon (managed PostgreSQL, London) |
 
+</details>
+
 All configuration (database credentials, JWT secret, allowed CORS origins) is supplied through environment variables, so no secrets live in the repository. The whole stack can also run locally with `docker compose up --build`.
 
 ## Running Locally
 
 ### Prerequisites
-* Java 17 or later
-* Node.js and npm
-* PostgreSQL
+- Java 17 or later
+- Node.js and npm
+- PostgreSQL
 
 ### Backend
 1. Create a PostgreSQL database for the app.
@@ -106,10 +113,3 @@ Integration tests use `@SpringBootTest` with MockMvc and an in memory H2 databas
 cd backend
 mvn test
 ```
-
-## Roadmap
-
-* Task priority and work or home categories
-* Progress stats on the dashboard
-* Input validation on project creation
-* Move to a self managed VPS with Nginx and HTTPS
