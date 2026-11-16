@@ -18,6 +18,7 @@ flowchart LR
     Nginx -->|Static Assets| Client
     Client -->|REST API + JWT :8080| API["Backend Service (Java 17 / Spring Boot)"]
     API -->|JDBC :5432| DB[("PostgreSQL Container + Persistent Volume")]
+```
 
 ## Features
 
