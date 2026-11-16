@@ -8,6 +8,17 @@ A full stack task management app for organising projects and tasks, built with a
 
 Click **Try as guest** on the login page to explore with sample data, no sign up needed. The backend runs on a free tier that sleeps when idle, so the first request can take up to a minute.
 
+## System Architecture & Cloud Deployment
+
+Trello Lite is deployed on an **AWS EC2 (Ubuntu 24.04)** instance using a **hybrid containerised/native architecture** designed to run reliably within AWS Free Tier resource limits (1 GB RAM / 8 GB root EBS volume).
+
+```mermaid
+flowchart LR
+    Client["Browser (React / TypeScript)"] -->|HTTP :80| Nginx["Frontend Container (Nginx)"]
+    Nginx -->|Static Assets| Client
+    Client -->|REST API + JWT :8080| API["Backend Service (Java 17 / Spring Boot)"]
+    API -->|JDBC :5432| DB[("PostgreSQL Container + Persistent Volume")]
+
 ## Features
 
 - Secure registration and login with JWT authentication
